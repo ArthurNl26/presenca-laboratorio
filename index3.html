@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Presença Laboratório</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+      width: 350px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+
+  <!-- Firebase compatível -->
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h1>Registro de Presença</h1>
+  <form id="form-presenca">
+    <input type="text" id="nome" placeholder="Nome" required>
+    <input type="text" id="matricula" placeholder="Matrícula" required>
+    <button type="submit">Registrar</button>
+  </form>
+</div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCRpjXy3xXfpcDJN-AXGrakFTg33m6lDto",
+    authDomain: "presenca-laboratorio.firebaseapp.com",
+    projectId: "presenca-laboratorio",
+    storageBucket: "presenca-laboratorio.firebasestorage.app",
+    messagingSenderId: "553664226146",
+    appId: "1:553664226146:web:13c728b0cfaaf8fcd8823b"
+  };
+
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  document.getElementById('form-presenca').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nome = document.getElementById('nome').value;
+    const matricula = document.getElementById('matricula').value;
+    const agora = new Date(); // data e hora automática
+
+    try {
+      await db.collection('presencas').add({
+        nome: nome,
+        matricula: matricula,
+        horario: agora.toLocaleString() // salva data e hora em formato legível
+      });
+      alert('Presença registrada com sucesso!');
+      document.getElementById('form-presenca').reset();
+    } catch (err) {
+      alert('Erro ao registrar presença: ' + err.message);
+      console.error("Erro ao registrar:", err);
+    }
+  });
+</script>
+
+</body>
+</html>
